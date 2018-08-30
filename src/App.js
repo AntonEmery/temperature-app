@@ -52,7 +52,6 @@ class App extends Component {
             tempC: result.current.temp_c,
             tempF: result.current.temp_f,
             currentTemp: result.current.temp_f,
-
           })
       })
 
@@ -84,7 +83,6 @@ class App extends Component {
         <LocationForm submitLocation={this.submitLocation} />
         {!this.state.displayData && this.state.loading && <p>Loading</p>}
         {this.state.displayData && <DataWrapper currentTemp={currentTemp} maxTemp={maxTemp} minTemp={minTemp} toggleTemp={this.toggleTemp} units={units} />}
-
       </div>
     );
   }

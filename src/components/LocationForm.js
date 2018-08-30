@@ -36,7 +36,7 @@ class LocationForm extends Component {
           <option value="Tel Aviv">Tel Aviv, Israel</option>
           <option value="New York">New York City, NY</option>
           <option value="Murmansk">Murmansk, Russia</option>
-          <option value="Instanbul">Istanbul, Turkey</option>
+          <option value="Istanbul">Istanbul, Turkey</option>
         </select>
 
         </label>

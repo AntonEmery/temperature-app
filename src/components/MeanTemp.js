@@ -12,11 +12,12 @@ class MeanTemp extends Component {
     const { maxTemp, minTemp } = this.props;
     return (
       <div>
-        <p>Mean Temp</p>
+        <p>Max and Min Temp</p>
         <BarChart
           axes
           colorBars
           width={250}
+          height={400}
           data={[
             {x: 'Max', y: maxTemp},
             {x: 'Min', y: minTemp}
