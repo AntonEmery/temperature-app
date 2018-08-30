@@ -10,11 +10,35 @@ class App extends Component {
       this.state = {
         displayData: false,
         loading: false,
-        temp_c: '',
-        temp_f: '',
-        maxtemp_c: '',
-        mintemp_c: ''
+        tempC: '',
+        tempF: '',
+        maxTempC: '',
+        minTempC: '',
+        maxTempF: '',
+        minTempF: '',
+        currentTemp: '',
+        maxTemp: '',
+        minTemp: '',
+        units: 'Fahrenheit'
       }
+  }
+
+  toggleTemp = () => {
+    if(this.state.units === 'Celsius') {
+      this.setState({
+        currentTemp: this.state.tempF,
+        maxTemp: this.state.maxTempF,
+        minTemp: this.state.minTempF,
+        units: 'Fahrenheit'
+      })
+    } else {
+      this.setState({
+        currentTemp: this.state.tempC,
+        maxTemp: this.state.maxTempC,
+        minTemp: this.state.minTempC,
+        units: 'Celsius'
+      })
+    }
   }
 
   submitLocation = (location) => {
@@ -25,8 +49,10 @@ class App extends Component {
       }).then(result => {
           this.setState({
             displayData: true,
-            temp_c: result.current.temp_c,
-            temp_f: result.current.temp_f,
+            tempC: result.current.temp_c,
+            tempF: result.current.temp_f,
+            currentTemp: result.current.temp_f,
+
           })
       })
 
@@ -34,17 +60,20 @@ class App extends Component {
       .then(data => {
         return data.json();
       }).then(result => {
-        console.log(result.forecast.forecastday[0].day)
         this.setState({
-          maxtemp_c: result.forecast.forecastday[0].day.maxtemp_c,
-          mintemp_c: result.forecast.forecastday[0].day.mintemp_c
+          maxTempC: result.forecast.forecastday[0].day.maxtemp_c,
+          minTempC: result.forecast.forecastday[0].day.mintemp_c,
+          maxTempF: result.forecast.forecastday[0].day.maxtemp_f,
+          minTempF: result.forecast.forecastday[0].day.mintemp_f,
+          maxTemp: result.forecast.forecastday[0].day.maxtemp_f,
+          minTemp: result.forecast.forecastday[0].day.mintemp_f
         })
       })
     })
   }
 
   render() {
-    const {temp_c, temp_f, maxtemp_c, mintemp_c } = this.state;
+    const { maxTemp, minTemp, currentTemp, units } = this.state;
 
     return (
       <div className="App">
@@ -54,7 +83,8 @@ class App extends Component {
         </header>
         <LocationForm submitLocation={this.submitLocation} />
         {!this.state.displayData && this.state.loading && <p>Loading</p>}
-        {this.state.displayData && <DataWrapper temp_c={temp_c} temp_f={temp_f} maxtemp_c={maxtemp_c} mintemp_c={mintemp_c}/>}
+        {this.state.displayData && <DataWrapper currentTemp={currentTemp} maxTemp={maxTemp} minTemp={minTemp} toggleTemp={this.toggleTemp} units={units} />}
+
       </div>
     );
   }

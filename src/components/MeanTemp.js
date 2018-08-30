@@ -9,7 +9,7 @@ class MeanTemp extends Component {
 
   render() {
 
-    const { maxtemp_c, mintemp_c } = this.props;
+    const { maxTemp, minTemp } = this.props;
     return (
       <div>
         <p>Mean Temp</p>
@@ -18,10 +18,9 @@ class MeanTemp extends Component {
           colorBars
           width={250}
           data={[
-            {x: 'Max', y: maxtemp_c},
-            {x: 'Min', y: mintemp_c}
+            {x: 'Max', y: maxTemp},
+            {x: 'Min', y: minTemp}
           ]}
-
         />
       </div>
     );

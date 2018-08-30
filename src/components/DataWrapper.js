@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import CurrentTemp from './CurrentTemp';
 import MeanTemp from  './MeanTemp';
 
-function DataWrapper({ temp_c, temp_f, maxtemp_c, mintemp_c }) {
+function DataWrapper({ maxTemp, minTemp, currentTemp, units, toggleTemp }) {
 
     return (
       <div>
-        <CurrentTemp temp_c={temp_c} temp_f={temp_f} />
-        <MeanTemp maxtemp_c={maxtemp_c} mintemp_c={mintemp_c} />
+        <h3>Current Temperature Data in {units}</h3>
+
+        <CurrentTemp currentTemp={currentTemp} />
+        <MeanTemp maxTemp={maxTemp} minTemp={minTemp} />
+        <button onClick={toggleTemp}>Choose Celsius or Farenheit</button>
       </div>
     )
 }
