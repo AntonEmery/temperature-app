@@ -6,7 +6,7 @@ class LocationForm extends Component {
     super(props)
 
     this.state = {
-      location: ''
+      location: 'San Francisco'
     }
   }
 
@@ -14,22 +14,36 @@ class LocationForm extends Component {
     this.setState({ location: e.target.value })
   }
 
-  handleSubmit = () => {
-    console.log('form submitted');
+  handleSubmit = (e) => {
+    this.props.submitLocation(this.state.location);
+    e.preventDefault();
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
         <label htmlFor="location">Location
-        <input
-          type="text"
+        <select
           name="location"
           value={this.state.location}
           onChange={this.handleChange}
-        />
+        >
+          <option value="San Francisco">San Francisco, CA</option>
+          <option value="Amsterdam">Amsterdam, Netherlands</option>
+          <option value="Oakland">Oakland, CA</option>
+          <option value="Rome">Rome, Italy</option>
+          <option value="Cleveland">Cleveland, OH</option>
+          <option value="Tel Aviv">Tel Aviv, Israel</option>
+          <option value="New York">New York City, NY</option>
+          <option value="Murmansk">Murmansk, Russia</option>
+          <option value="Instanbul">Istanbul, Turkey</option>
+        </select>
+
         </label>
-        <input type="submit" value="Submit" />
+        <input
+          type="submit"
+          value="Submit"
+        />
       </form>
     )
   }
