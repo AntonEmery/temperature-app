@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import LocationForm from './components/LocationForm';
 import DataWrapper from './components/DataWrapper';
+import moment from 'moment';
 
 class App extends Component {
   constructor(props) {
@@ -21,6 +22,15 @@ class App extends Component {
         minTemp: '',
         units: 'Fahrenheit'
       }
+  }
+
+  componentDidMount() {
+    let days = []
+    for(var i=1; i<8; i++) {
+      let today = moment();
+      today = today.subtract(i, 'days').format('YYYY-MM-DD');
+      days.push(today);
+    }
   }
 
   toggleTemp = () => {
