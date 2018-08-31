@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CurrentTemp from './CurrentTemp';
 import MeanTemp from  './MeanTemp';
-import AggregrateTemps from './AggregateTemps';
+import DailyTemps from './DailyTemps';
 import WeeklyTemps from './WeeklyTemps';
 
 class DataWrapper extends Component {
@@ -22,10 +22,9 @@ class DataWrapper extends Component {
         <MeanTemp maxTemp={maxTemp} minTemp={minTemp} />
         <button className="btn change-view" onClick={() => this.setState({ view: 'daily' })}>View Daily</button>
         <button className="btn change-view" onClick={() => this.setState({ view: 'weekly' })}>View Weekly</button>
-        <button className="btn change-view" onClick={toggleTemp}>View Monthly</button>
 
-        {this.state.view === 'daily' && <AggregrateTemps tempHistory={tempHistory} units={units}/>}
-        {this.state.view === 'weekly' && <WeeklyTemps weeklyTemps={weeklyTemps} />}
+        {this.state.view === 'daily' && <DailyTemps tempHistory={tempHistory} units={units}/>}
+        {this.state.view === 'weekly' && <WeeklyTemps weeklyTemps={weeklyTemps} units={units} />}
       </div>
     )
   }

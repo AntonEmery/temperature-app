@@ -68,7 +68,7 @@ class App extends Component {
 
   submitLocation = (location) => {
     // set loading to true so loader is displayed
-    this.setState((prevState, props) => ({ loading: true }))
+    this.setState((prevState, props) => ({ loading: true, units: 'Fahrenheit' }))
     // get current weather
     fetch(`http://api.apixu.com/v1/current.json?key=06afaabe82054526aca231633182908&q=${location}`)
     .then(data => {
@@ -108,7 +108,8 @@ class App extends Component {
         return {
           date: date.forecast.forecastday[0].date,
           tempC: date.forecast.forecastday[0].day.avgtemp_c,
-          tempF: date.forecast.forecastday[0].day.avgtemp_f
+          tempF: date.forecast.forecastday[0].day.avgtemp_f,
+          temp: date.forecast.forecastday[0].day.avgtemp_f,
         }
       })
       this.setState({ tempHistory }, () => this.setWeek())
