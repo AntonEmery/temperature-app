@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import LocationForm from './components/LocationForm';
 import DataWrapper from './components/DataWrapper';
+import moment from 'moment';
 
 class App extends Component {
   constructor(props) {
@@ -19,8 +20,19 @@ class App extends Component {
         currentTemp: '',
         maxTemp: '',
         minTemp: '',
-        units: 'Fahrenheit'
+        units: 'Fahrenheit',
+        tempHistory: []
       }
+  }
+
+  componentDidMount() {
+    let days = []
+    for(var i=1; i<7; i++) {
+      let today = moment();
+      today = today.subtract(i, 'days').format('YYYY-MM-DD');
+      days.push(today);
+      this.setState({history: days})
+    }
   }
 
   toggleTemp = () => {
@@ -42,38 +54,55 @@ class App extends Component {
   }
 
   submitLocation = (location) => {
-    this.setState({ loading: true }, () => {
-      fetch(`http://api.apixu.com/v1/current.json?key=06afaabe82054526aca231633182908&q=${location}`)
-      .then(data => {
-        return data.json();
-      }).then(result => {
-          this.setState({
-            displayData: true,
-            tempC: result.current.temp_c,
-            tempF: result.current.temp_f,
-            currentTemp: result.current.temp_f,
+    this.setState((prevState, props) => ({ loading: true }))
 
-          })
-      })
-
-      fetch(`http://api.apixu.com/v1/forecast.json?key=06afaabe82054526aca231633182908&q=${location}`)
-      .then(data => {
-        return data.json();
-      }).then(result => {
+    fetch(`http://api.apixu.com/v1/current.json?key=06afaabe82054526aca231633182908&q=${location}`)
+    .then(data => {
+      return data.json();
+    }).then(result => {
         this.setState({
-          maxTempC: result.forecast.forecastday[0].day.maxtemp_c,
-          minTempC: result.forecast.forecastday[0].day.mintemp_c,
-          maxTempF: result.forecast.forecastday[0].day.maxtemp_f,
-          minTempF: result.forecast.forecastday[0].day.mintemp_f,
-          maxTemp: result.forecast.forecastday[0].day.maxtemp_f,
-          minTemp: result.forecast.forecastday[0].day.mintemp_f
+          displayData: true,
+          tempC: result.current.temp_c,
+          tempF: result.current.temp_f,
+          currentTemp: result.current.temp_f,
         })
+    })
+
+    fetch(`http://api.apixu.com/v1/forecast.json?key=06afaabe82054526aca231633182908&q=${location}`)
+    .then(data => {
+      return data.json();
+    }).then(result => {
+      this.setState({
+        maxTempC: result.forecast.forecastday[0].day.maxtemp_c,
+        minTempC: result.forecast.forecastday[0].day.mintemp_c,
+        maxTempF: result.forecast.forecastday[0].day.maxtemp_f,
+        minTempF: result.forecast.forecastday[0].day.mintemp_f,
+        maxTemp: result.forecast.forecastday[0].day.maxtemp_f,
+        minTemp: result.forecast.forecastday[0].day.mintemp_f
       })
+    })
+
+    let dates = this.state.history.map(item => {
+      return fetch(`http://api.apixu.com/v1/history.json?key=06afaabe82054526aca231633182908&q=${location}&dt=${item}`)
+      .then(data => {
+        return data.json();
+      })
+    })
+    Promise.all(dates)
+    .then(dates => {
+      let tempHistory = dates.map(date => {
+        return {
+          date: date.forecast.forecastday[0].date,
+          tempC: date.forecast.forecastday[0].day.avgtemp_c,
+          tempF: date.forecast.forecastday[0].day.avgtemp_f
+        }
+      })
+      this.setState({ tempHistory })
     })
   }
 
   render() {
-    const { maxTemp, minTemp, currentTemp, units } = this.state;
+    const { maxTemp, minTemp, currentTemp, units, tempHistory } = this.state;
 
     return (
       <div className="App">
@@ -83,8 +112,7 @@ class App extends Component {
         </header>
         <LocationForm submitLocation={this.submitLocation} />
         {!this.state.displayData && this.state.loading && <p>Loading</p>}
-        {this.state.displayData && <DataWrapper currentTemp={currentTemp} maxTemp={maxTemp} minTemp={minTemp} toggleTemp={this.toggleTemp} units={units} />}
-
+        {this.state.displayData && <DataWrapper currentTemp={currentTemp} maxTemp={maxTemp} minTemp={minTemp} toggleTemp={this.toggleTemp} units={units} tempHistory={tempHistory} />}
       </div>
     );
   }
