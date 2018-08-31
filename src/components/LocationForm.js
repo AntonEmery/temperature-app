@@ -22,7 +22,7 @@ class LocationForm extends Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <label htmlFor="location">Location
+        <label htmlFor="location">Location</label>
         <select
           name="location"
           value={this.state.location}
@@ -38,12 +38,13 @@ class LocationForm extends Component {
           <option value="Murmansk">Murmansk, Russia</option>
           <option value="Istanbul">Istanbul, Turkey</option>
         </select>
-
-        </label>
-        <input
-          type="submit"
-          value="Submit"
-        />
+        <p>
+          <input
+            className="btn"
+            type="submit"
+            value="Submit"
+          />
+          </p>
       </form>
     )
   }
