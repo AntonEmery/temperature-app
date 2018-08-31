@@ -107,8 +107,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Temperature Data</h1>
+          <h1 className="App-title">Temperature Data Around the World</h1>
         </header>
         <LocationForm submitLocation={this.submitLocation} />
         {!this.state.displayData && this.state.loading && <p>Loading</p>}

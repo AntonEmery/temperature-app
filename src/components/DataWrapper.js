@@ -10,9 +10,9 @@ function DataWrapper({ maxTemp, minTemp, currentTemp, units, toggleTemp, tempHis
       <div>
         <h3>Current Temperature Data in {units}</h3>
 
+        <button className="btn" onClick={toggleTemp}>Toggle Celsius or Farenheit</button>
         <CurrentTemp currentTemp={currentTemp} />
         <MeanTemp maxTemp={maxTemp} minTemp={minTemp} />
-        <button onClick={toggleTemp}>Toggle Celsius or Farenheit</button>
         <AggregrateTemps tempHistory={tempHistory} units={units}/>
       </div>
     )
