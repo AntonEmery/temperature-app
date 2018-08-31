@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CurrentTemp from './CurrentTemp';
 import MeanTemp from  './MeanTemp';
+import AggregrateTemps from './AggregateTemps';
 
-function DataWrapper({ maxTemp, minTemp, currentTemp, units, toggleTemp }) {
+function DataWrapper({ maxTemp, minTemp, currentTemp, units, toggleTemp, tempHistory }) {
 
     return (
       <div>
@@ -12,6 +13,7 @@ function DataWrapper({ maxTemp, minTemp, currentTemp, units, toggleTemp }) {
         <CurrentTemp currentTemp={currentTemp} />
         <MeanTemp maxTemp={maxTemp} minTemp={minTemp} />
         <button onClick={toggleTemp}>Toggle Celsius or Farenheit</button>
+        <AggregrateTemps tempHistory={tempHistory} />
       </div>
     )
 }
