@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { BarChart } from 'react-easy-chart';
 
 
@@ -8,15 +7,18 @@ class AggregrateTemps extends Component {
 
   render() {
     const { tempHistory, units } = this.props;
+
+    // go through tempHistory array, select the appropriate temp if C or F are specified
     tempHistory.forEach(item => {
       if(units === 'Celsius') {
         item.temp = item.tempC;
       } else {
         item.temp = item.tempF
       }
-      });
+    });
 
     return (
+      // wait until array populated to render graph
      tempHistory.length > 0 && <BarChart
           axes
           colorBars
