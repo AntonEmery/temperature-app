@@ -9,7 +9,7 @@ class AggregrateTemps extends Component {
   render() {
     const { tempHistory } = this.props;
     return (
-      <BarChart
+     tempHistory.length > 0 && <BarChart
           axes
           colorBars
           width={450}
@@ -20,8 +20,7 @@ class AggregrateTemps extends Component {
             {x: tempHistory[2].date, y: tempHistory[2].tempC},
             {x: tempHistory[3].date, y: tempHistory[3].tempC},
             {x: tempHistory[4].date, y: tempHistory[4].tempC},
-            {x: tempHistory[5].date, y: tempHistory[5].tempC},
-            {x: tempHistory[6].date, y: tempHistory[6].tempC},
+            {x: tempHistory[5].date, y: tempHistory[5].tempC}
           ]}
         />
     );

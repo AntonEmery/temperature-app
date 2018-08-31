@@ -21,25 +21,17 @@ class App extends Component {
         maxTemp: '',
         minTemp: '',
         units: 'Fahrenheit',
-        tempHistory: [
-          {tempC: 10, tempF: 30, date: '2018-08-23' },
-          {tempC: 4, tempF: 30, date: '2018-08-21' },
-          {tempC: 1, tempF: 30, date: '2018-08-22' },
-          {tempC: 6, tempF: 30, date: '2018-08-16' },
-          {tempC: 15, tempF: 30, date: '2018-08-13' },
-          {tempC: 35, tempF: 30, date: '2018-08-10' },
-          {tempC: 20, tempF: 30, date: '2018-08-18' }
-        ]
+        tempHistory: []
       }
   }
 
   componentDidMount() {
     let days = []
-    for(var i=1; i<8; i++) {
+    for(var i=1; i<7; i++) {
       let today = moment();
       today = today.subtract(i, 'days').format('YYYY-MM-DD');
       days.push(today);
-      console.log(days)
+      this.setState({history: days})
     }
   }
 
@@ -90,6 +82,23 @@ class App extends Component {
       })
     })
 
+    let dates = this.state.history.map(item => {
+      return fetch(`http://api.apixu.com/v1/history.json?key=06afaabe82054526aca231633182908&q=${location}&dt=${item}`)
+      .then(data => {
+        return data.json();
+      })
+    })
+    Promise.all(dates)
+    .then(dates => {
+      let tempHistory = dates.map(date => {
+        return {
+          date: date.forecast.forecastday[0].date,
+          tempC: date.forecast.forecastday[0].day.avgtemp_c,
+          tempF: date.forecast.forecastday[0].day.avgtemp_f
+        }
+      })
+      this.setState({ tempHistory })
+    })
   }
 
   render() {
