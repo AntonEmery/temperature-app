@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import LocationForm from './components/LocationForm';
 import DataWrapper from './components/DataWrapper';
@@ -21,18 +20,32 @@ class App extends Component {
         maxTemp: '',
         minTemp: '',
         units: 'Fahrenheit',
-        tempHistory: []
+        tempHistory: [],
+        weeklyTemps: []
       }
   }
 
   componentDidMount() {
+    // use moment.js to calculate the previous 6 dates
     let days = []
-    for(var i=1; i<7; i++) {
+    for(let i=1; i<7; i++) {
       let today = moment();
       today = today.subtract(i, 'days').format('YYYY-MM-DD');
       days.push(today);
-      this.setState({history: days})
+      this.setState({ history: days });
     }
+  }
+
+  setWeek = () => {
+    // get number of days in the current week starting from today
+    let week = parseInt(moment().startOf('week').fromNow()[0], 10);
+    let weeklyDates = [];
+    for(let i=0; i<week; i++) {
+      // push that many days from tempHistory into the weeklyDates array.
+      // that gives us the temp data for the current week
+      weeklyDates.push(this.state.tempHistory[i])
+    }
+    this.setState({ weeklyTemps: weeklyDates })
   }
 
   toggleTemp = () => {
@@ -54,8 +67,9 @@ class App extends Component {
   }
 
   submitLocation = (location) => {
-    this.setState((prevState, props) => ({ loading: true }))
-
+    // set loading to true so loader is displayed
+    this.setState((prevState, props) => ({ loading: true, units: 'Fahrenheit' }))
+    // get current weather
     fetch(`http://api.apixu.com/v1/current.json?key=06afaabe82054526aca231633182908&q=${location}`)
     .then(data => {
       return data.json();
@@ -67,7 +81,7 @@ class App extends Component {
           currentTemp: result.current.temp_f,
         })
     })
-
+    // get max/min temps for the current day
     fetch(`http://api.apixu.com/v1/forecast.json?key=06afaabe82054526aca231633182908&q=${location}`)
     .then(data => {
       return data.json();
@@ -81,7 +95,7 @@ class App extends Component {
         minTemp: result.forecast.forecastday[0].day.mintemp_f
       })
     })
-
+    // get previous weather for past six days
     let dates = this.state.history.map(item => {
       return fetch(`http://api.apixu.com/v1/history.json?key=06afaabe82054526aca231633182908&q=${location}&dt=${item}`)
       .then(data => {
@@ -94,15 +108,17 @@ class App extends Component {
         return {
           date: date.forecast.forecastday[0].date,
           tempC: date.forecast.forecastday[0].day.avgtemp_c,
-          tempF: date.forecast.forecastday[0].day.avgtemp_f
+          tempF: date.forecast.forecastday[0].day.avgtemp_f,
+          temp: date.forecast.forecastday[0].day.avgtemp_f,
         }
       })
-      this.setState({ tempHistory })
+      // after the weather history is assigned to state, get the required days from that history for the weekly data
+      this.setState({ tempHistory }, () => this.setWeek())
     })
   }
 
   render() {
-    const { maxTemp, minTemp, currentTemp, units, tempHistory } = this.state;
+    const { maxTemp, minTemp, currentTemp, units, tempHistory, weeklyTemps } = this.state;
 
     return (
       <div className="App">
@@ -110,8 +126,10 @@ class App extends Component {
           <h1 className="App-title">Temperature Data Around the World</h1>
         </header>
         <LocationForm submitLocation={this.submitLocation} />
+        {/* Display loading during API request */}
         {!this.state.displayData && this.state.loading && <p>Loading</p>}
-        {this.state.displayData && <DataWrapper currentTemp={currentTemp} maxTemp={maxTemp} minTemp={minTemp} toggleTemp={this.toggleTemp} units={units} tempHistory={tempHistory} />}
+        {/* Display the rest of the data once request returns */}
+        {this.state.displayData && <DataWrapper currentTemp={currentTemp} maxTemp={maxTemp} minTemp={minTemp} toggleTemp={this.toggleTemp} units={units} tempHistory={tempHistory} weeklyTemps={weeklyTemps} />}
       </div>
     );
   }
