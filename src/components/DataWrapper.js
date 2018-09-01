@@ -20,9 +20,9 @@ class DataWrapper extends Component {
         <button className="btn" onClick={toggleTemp}>Toggle Celsius or Farenheit</button>
         <CurrentTemp currentTemp={currentTemp} />
         <MeanTemp maxTemp={maxTemp} minTemp={minTemp} />
+        {/* these buttons toggle daily or weekly graph view */}
         <button className="btn change-view" onClick={() => this.setState({ view: 'daily' })}>View Daily</button>
         <button className="btn change-view" onClick={() => this.setState({ view: 'weekly' })}>View Weekly</button>
-
         {this.state.view === 'daily' && <DailyTemps tempHistory={tempHistory} units={units}/>}
         {this.state.view === 'weekly' && <WeeklyTemps weeklyTemps={weeklyTemps} units={units} />}
       </div>

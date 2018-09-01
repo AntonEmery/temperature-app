@@ -112,6 +112,7 @@ class App extends Component {
           temp: date.forecast.forecastday[0].day.avgtemp_f,
         }
       })
+      // after the weather history is assigned to state, get the required days from that history for the weekly data
       this.setState({ tempHistory }, () => this.setWeek())
     })
   }

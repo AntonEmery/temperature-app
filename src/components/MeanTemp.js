@@ -4,10 +4,7 @@ import { BarChart } from 'react-easy-chart';
 
 
 class MeanTemp extends Component {
-  state = {  };
-
   render() {
-
     const { maxTemp, minTemp } = this.props;
     return (
       <div>
