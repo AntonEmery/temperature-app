@@ -112,11 +112,12 @@ class App extends Component {
     Promise.all(dates)
     .then(dates => {
       let tempHistory = dates.map(date => {
+        let forecast = date.forecast.forecastday[0];
         return {
-          date: date.forecast.forecastday[0].date,
-          tempC: date.forecast.forecastday[0].day.avgtemp_c,
-          tempF: date.forecast.forecastday[0].day.avgtemp_f,
-          temp: date.forecast.forecastday[0].day.avgtemp_f,
+          date: forecast.date,
+          tempC: forecast.day.avgtemp_c,
+          tempF: forecast.day.avgtemp_f,
+          temp: forecast.day.avgtemp_f,
         }
       })
       // after the weather history is assigned to state, get the required days from that history for the weekly data
