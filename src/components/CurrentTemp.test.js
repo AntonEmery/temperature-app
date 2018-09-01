@@ -1,9 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import renderer from 'react-test-renderer';
 import CurrentTemp from './CurrentTemp';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<CurrentTemp currentTemp="85" />, div);
-  ReactDOM.unmountComponentAtNode(div);
+it('Current temp renders when temp is passed in as props', () => {
+  const currentTemp = 30;
+  const tree = renderer.create(<CurrentTemp currentTemp={currentTemp} />).toJSON();
+  expect(tree).toMatchSnapshot();
 });
