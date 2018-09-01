@@ -13,7 +13,7 @@ describe('Location form component', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it('Select should change the state of form', () => {
+  it('Select input should change the state of form', () => {
     let form = shallow(<LocationForm />);
       form.find('select').simulate('change', { target: { value: 'Oakland' }})
       expect(form.state('location')).toEqual('Oakland')

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Daily temp component Current temp renders when temp is passed in as props 1`] = `
+exports[`Current temp component Component renders given correct prop 1`] = `
 <div>
   <p>
     30
