@@ -32,16 +32,18 @@ class App extends Component {
       let today = moment();
       today = today.subtract(i, 'days').format('YYYY-MM-DD');
       days.push(today);
+      // add array of prev six dates to state
       this.setState({ history: days });
     }
   }
 
   setWeek = () => {
-    // get number of days in the current week starting from today
+    // get number of previous days in the current week starting from today
     let week = parseInt(moment().startOf('week').fromNow()[0], 10);
     let weeklyDates = [];
-    for(let i=0; i<week; i++) {
-      // push that many days from tempHistory into the weeklyDates array.
+    // need to limit i to less than 6 as the api will not return data farther back than 6 days
+    for(let i=0; i < week && i < 6; i++) {
+      // push that many days from tempHistory state into the weeklyDates array.
       // that gives us the temp data for the current week
       weeklyDates.push(this.state.tempHistory[i])
     }
@@ -49,6 +51,7 @@ class App extends Component {
   }
 
   toggleTemp = () => {
+    // if current state is Celsius and user toggles it switch to F and assign appropriate temps
     if(this.state.units === 'Celsius') {
       this.setState({
         currentTemp: this.state.tempF,
@@ -57,6 +60,7 @@ class App extends Component {
         units: 'Fahrenheit'
       })
     } else {
+      // else switch it back to C
       this.setState({
         currentTemp: this.state.tempC,
         maxTemp: this.state.maxTempC,
@@ -69,7 +73,7 @@ class App extends Component {
   submitLocation = (location) => {
     // set loading to true so loader is displayed
     this.setState((prevState, props) => ({ loading: true, units: 'Fahrenheit' }))
-    // get current weather
+    // get current temps
     fetch(`http://api.apixu.com/v1/current.json?key=06afaabe82054526aca231633182908&q=${location}`)
     .then(data => {
       return data.json();
@@ -86,18 +90,21 @@ class App extends Component {
     .then(data => {
       return data.json();
     }).then(result => {
+      const day = result.forecast.forecastday[0].day;
+      // set max/min temps in both units for the current day to state
       this.setState({
-        maxTempC: result.forecast.forecastday[0].day.maxtemp_c,
-        minTempC: result.forecast.forecastday[0].day.mintemp_c,
-        maxTempF: result.forecast.forecastday[0].day.maxtemp_f,
-        minTempF: result.forecast.forecastday[0].day.mintemp_f,
-        maxTemp: result.forecast.forecastday[0].day.maxtemp_f,
-        minTemp: result.forecast.forecastday[0].day.mintemp_f
+        maxTempC: day.maxtemp_c,
+        minTempC: day.mintemp_c,
+        maxTempF: day.maxtemp_f,
+        minTempF: day.mintemp_f,
+        // set initial max/min temp to F
+        maxTemp: day.maxtemp_f,
+        minTemp: day.mintemp_f
       })
     })
     // get previous weather for past six days
-    let dates = this.state.history.map(item => {
-      return fetch(`http://api.apixu.com/v1/history.json?key=06afaabe82054526aca231633182908&q=${location}&dt=${item}`)
+    let dates = this.state.history.map(date => {
+      return fetch(`http://api.apixu.com/v1/history.json?key=06afaabe82054526aca231633182908&q=${location}&dt=${date}`)
       .then(data => {
         return data.json();
       })
@@ -105,11 +112,12 @@ class App extends Component {
     Promise.all(dates)
     .then(dates => {
       let tempHistory = dates.map(date => {
+        let forecast = date.forecast.forecastday[0];
         return {
-          date: date.forecast.forecastday[0].date,
-          tempC: date.forecast.forecastday[0].day.avgtemp_c,
-          tempF: date.forecast.forecastday[0].day.avgtemp_f,
-          temp: date.forecast.forecastday[0].day.avgtemp_f,
+          date: forecast.date,
+          tempC: forecast.day.avgtemp_c,
+          tempF: forecast.day.avgtemp_f,
+          temp: forecast.day.avgtemp_f,
         }
       })
       // after the weather history is assigned to state, get the required days from that history for the weekly data
