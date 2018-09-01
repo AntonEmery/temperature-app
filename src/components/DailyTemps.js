@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BarChart } from 'react-easy-chart';
 
 
-class AggregrateTemps extends Component {
+class DailyTemps extends Component {
 
   render() {
     const { tempHistory, units } = this.props;
@@ -30,4 +30,4 @@ class AggregrateTemps extends Component {
   }
 }
 
-export default AggregrateTemps;
+export default DailyTemps;
